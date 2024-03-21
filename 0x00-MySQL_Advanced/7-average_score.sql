@@ -1,5 +1,5 @@
---a SQL script that creates a stored procedure
--- ComputeAverageScoreForUser
+-- Define a stored procedure to compute and store
+-- the average score
 
 DELIMITER $$
 
