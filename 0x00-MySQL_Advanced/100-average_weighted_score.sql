@@ -3,7 +3,7 @@
 
 DELIMITER $$
 
-CREATE PROCEDURE ComputeAverageWeightedScoreForUser(user_id INT)
+CREATE PROCEDURE ComputeAverageWeightedScoreForUser(u_id INT)
 BEGIN
 	DECLARE s_avg FLOAT;
 
