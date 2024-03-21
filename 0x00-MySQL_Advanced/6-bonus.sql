@@ -12,11 +12,11 @@ DECLARE p_id INT DEFAULT -1;
         FROM projects
         WHERE name = project_name;
         IF p_id = -1 THEN
-            SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'Project not found';
-        ELSE
-            INSERT INTO corrections (user_id, project_id, score)
-            VALUES (user_id, p_id, score);
+           INSERT INTO projects(name)
+           VALUES(project_name);
+           SELECT id INTO p_id
+                     FROM projects
+                     WHERE name = project_name;
         END IF;
 
         INSERT INTO corrections (user_id, project_id, score)

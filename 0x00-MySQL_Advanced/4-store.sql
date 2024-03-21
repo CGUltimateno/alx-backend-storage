@@ -7,8 +7,8 @@ FOR EACH ROW
 BEGIN
     DECLARE item varchar(255);
     DECLARE quantity int;
-        SET item = NEW.item;
-        SET qty = NEW.quantity;
+        SET item = NEW.item_name;
+        SET quantity = NEW.number;
         UPDATE items
         SET quantity = quantity - qty
         WHERE name = item;
