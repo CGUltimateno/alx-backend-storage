@@ -4,6 +4,7 @@
 -- student_id INT and bonus INT.
 
 DELIMITER $$
+
 CREATE PROCEDURE AddBonus
 (user_id INT, project_name VARCHAR(255), score INT)
 BEGIN
@@ -23,4 +24,5 @@ BEGIN
 	VALUES(user_id, p_id, score);
 END;
 $$
+
 DELIMITER ;

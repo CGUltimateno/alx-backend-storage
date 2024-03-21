@@ -3,7 +3,7 @@
 -- after adding a new order.
 DELIMITER $$
 
-CREATE TRIGGER update_quantity
+CREATE TRIGGER trgAddNewOrder
 AFTER INSERT
 ON orders FOR EACH ROW
 BEGIN
