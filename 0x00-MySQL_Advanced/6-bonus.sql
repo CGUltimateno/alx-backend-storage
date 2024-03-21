@@ -1,8 +1,5 @@
---a SQL script that creates a stored procedure
--- AddBonus that adds a new correction for a student.
--- The procedure must receive 2 arguments:
--- student_id INT and bonus INT.
-
+-- Define a stored procedure that adds a
+-- new correction for a student.
 DELIMITER $$
 
 CREATE PROCEDURE AddBonus
