@@ -10,15 +10,17 @@ CREATE PROCEDURE AddBonus
 BEGIN
 	DECLARE p_id INT DEFAULT -1;
 
+	-- Fetch id for a project if it exists
 	SELECT id into p_id
 	FROM projects
 	WHERE name = project_name;
 
 	IF p_id = -1 THEN
-
+		-- Record new project
 		INSERT INTO projects(name)
 		VALUES(project_name);
 
+		-- Retrieve id for newly added project
 		SELECT id INTO p_id
 		FROM projects
 		WHERE name = project_name;
