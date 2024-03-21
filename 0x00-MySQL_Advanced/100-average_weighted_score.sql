@@ -1,9 +1,9 @@
 -- Define a stored procedure to compute and store
--- the average weighted score for each student.
+-- the weighted average score obtained by a student.
 
 DELIMITER $$
 
-CREATE PROCEDURE average_weighted_score(user_id INT)
+CREATE PROCEDURE ComputeAverageWeightedScoreForUser(user_id INT)
 BEGIN
 	DECLARE s_avg FLOAT;
 
