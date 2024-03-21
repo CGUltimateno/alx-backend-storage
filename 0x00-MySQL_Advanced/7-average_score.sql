@@ -13,3 +13,6 @@ BEGIN
 	SET average_score = s_avg
 	WHERE id = u_id;
 END;
+$$
+
+DELIMITER ;
