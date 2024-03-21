@@ -5,7 +5,11 @@ CREATE TRIGGER update_quantity
 AFTER INSERT ON orders
 FOR EACH ROW
 BEGIN
-    UPDATE items
-    SET quantity = quantity - 1
-    WHERE id = NEW.item_id;
+    DECLARE item varchar(255);
+    DECLARE quantity int;
+        SET item = NEW.item;
+        SET qty = NEW.quantity;
+        UPDATE items
+        SET quantity = quantity - qty
+        WHERE name = item;
 END;
