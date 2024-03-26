@@ -1,2 +1,2 @@
-// a script that lists all documents in the collection school
-db.school.find({ name: { $eq: "Holberton School"} })
+// a script that lists all documents in the collection whose name matches given string
+db.school.find({ name: { $eq: "Holberton school" } })
