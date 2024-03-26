@@ -18,8 +18,7 @@ if __name__ == "__main__":
     client = MongoClient("mongodb://localhost:27017")
     logs = client.logs.nginx
     methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-    print(log_stats(logs))
-    for method in methods:
-        print("\tmethod {}: {}".format(method, log_stats(logs, "method", method)))
-
-
+    [print(f"\tmethod {method}: \
+    {log_stats(logs, 'method', method)}")
+     for method in methods]
+    print(f"{log_stats(logs, 'path', '/status')} status check")
