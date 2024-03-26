@@ -17,12 +17,9 @@ def log_stats(mongo_collection, q_key=None, q_val=None):
 if __name__ == "__main__":
     client = MongoClient("mongodb://localhost:27017")
     logs = client.logs.nginx
+    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
     print(log_stats(logs))
-    print(log_stats(logs, 'path', '/status'))
-    print(log_stats(logs, 'method', 'GET'))
-    print(log_stats(logs, 'method', 'POST'))
-    print(log_stats(logs, 'method', 'PUT'))
-    print(log_stats(logs, 'method', 'PATCH'))
-    print(log_stats(logs, 'method', 'DELETE'))
+    for method in methods:
+        print("\tmethod {}: {}".format(method, log_stats(logs, "method", method)))
 
 
