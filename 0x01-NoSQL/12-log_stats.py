@@ -11,7 +11,8 @@ def log_stats(mongo_collection, q_key=None, q_val=None):
     a Python function that provides some
     stats about Nginx logs stored in MongoDB
     """
-    return mongo_collection.count_documents({} if q_key is None and q_val is None else {q_key: q_val})
+    return (mongo_collection.count_documents({} if q_key is None and q_val is None
+            else {q_key: q_val}))
 
 
 if __name__ == "__main__":
