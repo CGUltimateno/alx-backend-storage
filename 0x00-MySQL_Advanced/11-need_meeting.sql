@@ -1,0 +1,9 @@
+-- a SQL script that creates a view need_meeting that
+-- lists all students that have a score under 80 (strict)
+-- and no last_meeting or more than 1 month.
+CREATE VIEW need_meeting AS
+    Select name
+    From students
+    Where score < 80 and
+	(last_meeting IS NULL OR ADDDATE(last_meeting, INTERVAL 1 MONTH) < CURDATE());
+
