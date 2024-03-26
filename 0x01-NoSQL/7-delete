@@ -1,1 +1,1 @@
-#!/usr/bin/env bash
+db.school.deleteMany({name: "Holberton School"})

@@ -1,1 +1,1 @@
-#!/usr/bin/env bash
+db.school.find({ name: { $eq: "Holberton School"} })
