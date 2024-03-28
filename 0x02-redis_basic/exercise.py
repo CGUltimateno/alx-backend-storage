@@ -40,16 +40,24 @@ def call_history(method: Callable) -> Callable:
     return wrapper
 
 
-def replay(method) -> None:
+def replay(fn: Callable) -> None:
     """Display the history of calls of a particular function"""
-    key = method.__qualname__
-    _redis = redis.Redis()
-    count = int(_redis.get(key).decode("utf-8"))
-    print(f"{key} was called {count} times:")
-    inputs = _redis.lrange(f"{key}:inputs", 0, -1)
-    outputs = _redis.lrange(f"{key}:outputs", 0, -1)
-    for i, (input, output) in zip(inputs, outputs):
-        print(f"{key}(*{input.decode('utf-8')}) -> {output.decode('utf-8')}")
+    if fn is None or not hasattr(fn, '__name__'):
+        return
+    fn_store = getattr(fn.__self__, '_redis', None)
+    if not isinstance(fn_store, redis.Redis):
+        return
+    method_name = fn.__qualname__
+    inputs = '{}:inputs'.format(method_name)
+    outputs = '{}:outputs'.format(method_name)
+    count = 0
+    if fn_store.exists(inputs):
+        count = int(fn_store.get(method_name))
+        print('{} was called {} times:'.format(method_name, count))
+        fn_inputs = fn_store.lrange(inputs, 0, -1)
+        fn_outputs = fn_store.lrange(outputs, 0, -1)
+        for fn_inputs, fn_outputs in zip(fn_inputs, fn_outputs):
+            print('{}(*{}) -> {}'.format(method_name, fn_inputs.decode('utf-8'), fn_outputs.decode('utf-8')))
 
 
 class Cache:
