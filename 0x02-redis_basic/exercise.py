@@ -52,6 +52,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @call_history
     @count_calls
     def store(self, data: Union[str, int, float]) -> str:
         """Store the input data in Redis and return a unique key"""
@@ -59,17 +60,16 @@ class Cache:
         self._redis.set(key, data)
         return key
 
-    @call_history
-    def get(self, key: str) -> Union[str, int, float]:
+    def get(self, key: str, fn: Callable = None):
         """Get the data stored in Redis for a given key"""
-        if key is int:
+        if fn is int:
             return self.get_int(self._redis.get(key))
-        elif key is str:
+        if (fn is str):
             return self.get_str(self._redis.get(key))
-        elif key is None:
+        if fn is None:
             return self._redis.get(key)
         else:
-            return key(self._redis.get(key))
+            return fn(self._redis.get(key))
 
     def get_str(self, key: str) -> str:
         """Get the data stored in Redis for a given key as a string"""
@@ -78,4 +78,3 @@ class Cache:
     def get_int(self, key: str) -> int:
         """Get the data stored in Redis for a given key as an integer"""
         return int(key.decode("utf-8"))
-
