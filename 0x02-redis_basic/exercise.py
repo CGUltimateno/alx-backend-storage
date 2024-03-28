@@ -5,30 +5,38 @@ Define a Cache class that will implement a simple caching system
 
 import redis
 import uuid
-from typing import Union, Callable
+from typing import Union, Callable, Any
 from functools import wraps
 
 
 def count_calls(method: Callable) -> Callable:
     """Decorator that will count how many times a method is called"""
+
     @wraps(method)
-    def wrapper(self, *data):
+    def wrapper(self, *args, **kwargs):
         """Wrapper function"""
-        self._redis.rpush(f"{method.__qualname__}:inputs", str(data))
-        uuid = method(self, *data)
-        self.redis.rpush(f"{method.__qualname__}:outputs", uuid)
-        return uuid
+        if isinstance(self._redis, redis.Redis):
+            self._redis.incr(method.__qualname__)
+        return method(self, *args, **kwargs)
+
     return wrapper
 
 
 def call_history(method: Callable) -> Callable:
     """Decorator that will store the history of inputs and outputs for a method"""
+
     @wraps(method)
-    def wrapper(self, data):
+    def wrapper(self, *args, **kwargs) -> Any:
         """Wrapper function"""
-        self._redis.incr(method.__qualname__)
-        output = method(self, data)
+        inputs = '{}:inputs'.format(method.__qualname__)
+        outputs = '{}:outputs'.format(method.__qualname__)
+        if isinstance(self._redis, redis.Redis):
+            self._redis.rpush(inputs, str(args))
+        output = method(self, *args, **kwargs)
+        if isinstance(self._redis, redis.Redis):
+            self._redis.rpush(outputs, output)
         return output
+
     return wrapper
 
 
@@ -64,9 +72,9 @@ class Cache:
         """Get the data stored in Redis for a given key"""
         if fn is int:
             return self.get_int(self._redis.get(key))
-        if (fn is str):
+        elif fn is str:
             return self.get_str(self._redis.get(key))
-        if fn is None:
+        elif fn is None:
             return self._redis.get(key)
         else:
             return fn(self._redis.get(key))
