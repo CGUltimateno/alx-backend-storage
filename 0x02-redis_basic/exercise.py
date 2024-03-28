@@ -57,7 +57,11 @@ def replay(fn: Callable) -> None:
         fn_inputs = fn_store.lrange(inputs, 0, -1)
         fn_outputs = fn_store.lrange(outputs, 0, -1)
         for fn_inputs, fn_outputs in zip(fn_inputs, fn_outputs):
-            print('{}(*{}) -> {}'.format(method_name, fn_inputs.decode('utf-8'), fn_outputs.decode('utf-8')))
+            print('{}(*{}) -> {}'.format(
+                method_name,
+                fn_inputs.decode("utf-8"),
+                fn_outputs,
+            ))
 
 
 class Cache:
