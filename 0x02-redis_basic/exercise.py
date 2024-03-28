@@ -11,42 +11,36 @@ from functools import wraps
 
 def count_calls(method: Callable) -> Callable:
     """Decorator that will count how many times a method is called"""
-    key = method.__qualname__
-
     @wraps(method)
-    def wrapper(self, *args, **kwargs):
+    def wrapper(self, *data):
         """Wrapper function"""
-        self._redis.incr(key)
-        return method(self, *args, **kwargs)
-
+        self._redis.rpush(f"{method.__qualname__}:inputs", str(data))
+        uuid = method(self, *data)
+        self.redis.rpush(f"{method.__qualname__}:outputs", uuid)
+        return uuid
     return wrapper
 
 
 def call_history(method: Callable) -> Callable:
     """Decorator that will store the history of inputs and outputs for a method"""
-    key = method.__qualname__
-
     @wraps(method)
-    def wrapper(self, *args, **kwargs):
+    def wrapper(self, data):
         """Wrapper function"""
-        self._redis.rpush(key + ":inputs", str(args))
-        output = method(self, *args, **kwargs)
-        self._redis.rpush(key + ":outputs", str(output))
+        self._redis.incr(method.__qualname__)
+        output = method(self, data)
         return output
-
     return wrapper
 
 
-def replay(method: Callable) -> None:
+def replay(method) -> None:
     """Display the history of calls of a particular function"""
     key = method.__qualname__
-    redis = method.__self__._redis
-    count = redis.get(key).decode('utf-8')
-    inputs = redis.lrange(key + ":inputs", 0, -1)
-    outputs = redis.lrange(key + ":outputs", 0, -1)
-
+    _redis = redis.Redis()
+    count = int(_redis.get(key).decode("utf-8"))
     print(f"{key} was called {count} times:")
-    for i, (input, output) in enumerate(zip(inputs, outputs)):
+    inputs = _redis.lrange(f"{key}:inputs", 0, -1)
+    outputs = _redis.lrange(f"{key}:outputs", 0, -1)
+    for i, (input, output) in zip(inputs, outputs):
         print(f"{key}(*{input.decode('utf-8')}) -> {output.decode('utf-8')}")
 
 
